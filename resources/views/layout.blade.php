@@ -24,7 +24,7 @@
                   <i class="fas fa-home"></i> 
                   Informações
                 </a>
-                <a href="/certificado/import" class="text-white list-group-item list-group-item-action bg-transparent  fw-bold">
+                <a href="/certificado/importar" class="text-white list-group-item list-group-item-action bg-transparent  fw-bold">
                   <i class="fas fa-certificate"></i> 
                   Importar Certificado
                 </a>
@@ -86,7 +86,9 @@
     </script>
     <style>
 
-
+        body{
+          font-family: "Apple Color Emoji","Segoe UI Emoji";
+        }
       
       #sidebar-wrapper {
         min-height: 100vh;

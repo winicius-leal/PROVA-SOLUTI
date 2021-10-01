@@ -10,19 +10,17 @@ use App\Models\{Pessoa, Certificado};
 
 class CertificadoController extends Controller
 {
-    public function create()
+    public function create(Request $request)
     {
-        $usuario = Auth::user();
-        $pessoa = Pessoa::with("CPF","Endereco","Telefone","Certificado","Usuario")->where("user_id", $usuario->id)->get();
+        $session = $request->session()->get("pessoa");
 
-        return view("certificado.create",["pessoa"=>$pessoa[0]]);
+        return view("certificado.create",["pessoa"=>$session[0]]);
     }
     
     public function store(Request $request)
     {   
 
-        $usuario = Auth::user();
-        $pessoa = Pessoa::with("CPF","Endereco","Telefone","Certificado","Usuario")->where("user_id", $usuario->id)->get();
+        $session = $request->session()->get("pessoa");
 
         if ($request->hasFile('certificado') && $request->file('certificado')->isValid()) {
             
@@ -39,7 +37,7 @@ class CertificadoController extends Controller
                 "issuerDn"=>$issuerDN,
                 "notBefore"=>$naoAntesDe,
                 "notAfter"=>$naoDepoisDe,
-                "pessoa_id"=>$pessoa[0]->id
+                "pessoa_id"=>$session[0]->id
             ]);
             
             $name = $certificado->id;

@@ -8,10 +8,9 @@ class HomeController extends Controller
 {
     public function index(Request $request){
 
-        $usuario = Auth::user();
-        $pessoa = Pessoa::with("CPF","Endereco","Telefone","Certificado","User")->where("id", $usuario->pessoa_id)->get();
+        $session = $request->session()->get("pessoa");
 
-        return view("dashboard.index", ["pessoa"=>$pessoa[0]]);        
+        return view("dashboard.index", ["pessoa"=>$session[0]]);        
     }
 
 }

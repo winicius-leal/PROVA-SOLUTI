@@ -7,7 +7,7 @@ use Illuminate\Support\Facades\Auth;
 use App\Models\Pessoa;
 
 
-class EntrarController extends Controller
+class LoginController extends Controller
 {
     public function index()
     {
@@ -28,6 +28,7 @@ class EntrarController extends Controller
         $pessoa = Pessoa::with("CPF","Endereco","Telefone","Certificado","User")->where("id", $usuario->pessoa_id)->get();
         
         $request->session()->put('pessoa', $pessoa);
-        return redirect("/");
+
+        return redirect("/certificado/importar");
     }
 }

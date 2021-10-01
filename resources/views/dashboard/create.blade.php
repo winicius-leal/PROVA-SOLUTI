@@ -19,7 +19,7 @@
         </div>
     @endif
 
-    <form method="post" action="/pessoa/alter/{{$pessoa->id}}">
+    <form method="post" action="/pessoa/alterar/{{$pessoa->id}}">
         @csrf
         <div class="container"> 
             <div class="mb-3 col-6">

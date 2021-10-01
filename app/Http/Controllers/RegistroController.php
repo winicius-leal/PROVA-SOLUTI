@@ -5,9 +5,10 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
-use App\Models\{Usuario,User,Pessoa,CPF,Telefone,Endereco};
+use App\Models\{User,Pessoa,CPF,Telefone,Endereco};
 use Illuminate\Support\Facades\Redirect;
 use App\Http\Requests\RegistroFormRequest;
+use App\Services\CriarPessoa;
 
 
 
@@ -23,9 +24,8 @@ class RegistroController extends Controller
 
         $validator = $request->validated();
 
-        $validator = $request->safe()->only(['name', 'email']);
-
         $email = new User();
+
         $retornoEmail = $email->validaEmail($request->email);
         
         if(isset($retornoEmail))
@@ -42,45 +42,11 @@ class RegistroController extends Controller
             return $retornoCpf;
         }
 
-        $request->password = Hash::make($request->password);
-    
+        $service = new CriarPessoa();
+        
+        $usuario = $service->criarPessoa($request);
 
-
-        $pessoa = Pessoa::create([
-            "nome"=>$request->name,
-            "dataNascimento"=>$request->DataNascimento,
-        ]);
-
-
-        $user = User::create([
-            "email"=>$request->email,
-            "password"=>$request->password,
-            "pessoa_id"=>$pessoa->id
-        ]);
-
-        CPF::create([
-            "numero"=>$request->CPF,
-            "pessoa_id"=>$pessoa->id
-        ]);
-
-        Telefone::create([
-            "ddd"=>$request->ddd,
-            "numero"=>$request->telefone,
-            "pessoa_id"=>$pessoa->id
-        ]);
-
-        Endereco::create([
-            "rua"=>$request->rua,
-            "numero"=>$request->numero,
-            "bairro"=>$request->bairro,
-            "cidade"=>$request->cidade,
-            "estado"=>$request->estado,
-            "pessoa_id"=>$pessoa->id
-        ]);
-
-        Auth::login($user);
-
-        return redirect("/");
+        return redirect("/entrar")->with('message', 'Usuario criado com sucesso!');
         
     }
 }

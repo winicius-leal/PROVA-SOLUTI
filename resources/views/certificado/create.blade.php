@@ -14,17 +14,16 @@
         </div>
     @endif
 
-    <div class="container col-6">    
+    <div class="col-md-6">    
         <form  method="post" enctype="multipart/form-data">
             @csrf
             <div class="input-group-prepend ">
-                <label clas="input-group-text" for="exampleFormControlFile1">Selecione o certificado</label>
+                <h1 clas="input-group-text" for="exampleFormControlFile1">Importe o seu certificado</h1>
                 <hr>
                 <input name="certificado" type="file" class="form-control-file" id="">
             </div>
-
             <button type="submit" class="btn btn-primary mt-2">Enviar</button>
         </form>
-    </div>    
+    </div>  
 </div>
 @endsection

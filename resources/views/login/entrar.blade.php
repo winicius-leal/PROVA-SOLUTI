@@ -31,7 +31,7 @@
             <a href="/" id="forgot_pswd">Esqueceu a senha?</a>
             <hr>
 
-            <a href="/register" class="btn btn-primary btn-block text-white" type="button" id=""><i class="fas fa-user-plus"></i> Criar</a>
+            <a href="/registrar" class="btn btn-primary btn-block text-white" type="button" id=""><i class="fas fa-user-plus"></i> Criar</a>
             </form>            
     </div>
 
