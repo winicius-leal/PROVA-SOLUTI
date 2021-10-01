@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use phpseclib3\File\X509;
 use App\Models\{Pessoa, Certificado};
+use App\Services\ImportarCertificado, AtualizarDadosDaSession;
 
 class CertificadoController extends Controller
 {
@@ -22,41 +23,20 @@ class CertificadoController extends Controller
 
         $session = $request->session()->get("pessoa");
 
-        if ($request->hasFile('certificado') && $request->file('certificado')->isValid()) {
-            
-            $x509 = new X509();
-            //$cert = $x509->loadX509(file_get_contents(storage_path('app/certificadoPEM/').'0104372021093061550d256ed06.pem'));
-            $cert = $x509->loadX509(file_get_contents($request->certificado));
-            $dn = $x509->getDN(X509::DN_STRING);
-            $issuerDN = $x509->getIssuerDN(X509::DN_STRING);
-            $naoAntesDe = $cert["tbsCertificate"]["validity"]["notBefore"]["utcTime"];
-            $naoDepoisDe = $cert["tbsCertificate"]["validity"]["notAfter"]["utcTime"];
+        $service = new ImportarCertificado();
 
-            $certificado = Certificado::create([
-                "dn"=>$dn,
-                "issuerDn"=>$issuerDN,
-                "notBefore"=>$naoAntesDe,
-                "notAfter"=>$naoDepoisDe,
-                "pessoa_id"=>$session[0]->id
-            ]);
-            
-            $name = $certificado->id;
-    
-            $extension = ".pem";
-    
-            $nameFile = "{$name}.{$extension}";
-    
-            $upload = $request->certificado->storeAs('certificadoPEM', $nameFile);
-
-            if (!$upload ){
-                return redirect()->back()->with('error', 'Falha ao fazer upload')->withInput();
-            }
-
-            return redirect("/");
-
-    
+        $return = $service->verificaArquivo($request->certificado);
+        
+        if (!$return)
+        {
+            return redirect()->back()->withErrors(['Não é um certificado válido']);
         }
 
-        return redirect()->back()->with('error', 'Arquivo inválido !')->withInput();
+        $certificado = $service->salvarCertificadoNoBanco($request, $session[0]->id);
+        
+        $upload = $service->importarCertificadoParaServidor($certificado->id, $request->certificado);
+
+        return redirect("/");
+        
     }
 }

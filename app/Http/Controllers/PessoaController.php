@@ -6,7 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\{Pessoa,CPF,Telefone,Endereco, User};
 use App\Http\Requests\PessoaFormRequest;
 use Illuminate\Support\Facades\Auth;
-use App\Services\{AlterarDadosDaPessoa};
+use App\Services\{AlterarDadosDaPessoa, AtualizarDadosDaSession};
 
 class PessoaController extends Controller
 {
@@ -27,7 +27,11 @@ class PessoaController extends Controller
 
         $service = new AlterarDadosDaPessoa();
        
-        return $service->alterarPessoa($request->all(), $usuario->pessoa_id);
+        return $service->alterarPessoa($request->all(), $usuario->pessoa_id, $request);
+
+        //AtualizarDadosDaSession::atualizaDadosSession($request);
+        
+        //return $retorno;
         
         
     }

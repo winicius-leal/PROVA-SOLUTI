@@ -10,6 +10,13 @@ class HomeController extends Controller
 
         $session = $request->session()->get("pessoa");
 
+        $certificados = $session[0]->Certificados;
+
+        foreach ($certificados as $certificado) {
+            //echo $certificado->dn;
+        }
+       
+        //exit;
         return view("dashboard.index", ["pessoa"=>$session[0]]);        
     }
 

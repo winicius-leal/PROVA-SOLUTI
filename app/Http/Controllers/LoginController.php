@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Pessoa;
-
+use App\Services\AtualizarDadosDaSession;
 
 class LoginController extends Controller
 {
@@ -23,11 +23,14 @@ class LoginController extends Controller
             return redirect()->back()->withErrors("Usuario ou senha inválidos!");
         }
 
+        AtualizarDadosDaSession::atualizaDadosSession($request);
+/*
         $usuario = Auth::user();
         
         $pessoa = Pessoa::with("CPF","Endereco","Telefone","Certificado","User")->where("id", $usuario->pessoa_id)->get();
         
         $request->session()->put('pessoa', $pessoa);
+        */
 
         return redirect("/certificado/importar");
     }

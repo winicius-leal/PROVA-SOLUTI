@@ -1,10 +1,11 @@
 <?php
 namespace App\Services;
 use App\Models\{Pessoa,CPF,Telefone,Endereco};
+use App\Services\AtualizarDadosDaSession;
 
 class AlterarDadosDaPessoa
 {
-    public function alterarPessoa($dados, $pessoa_id)
+    public function alterarPessoa($dados, $pessoa_id, $request)
     {   
 
         $CPF = CPF::where("pessoa_id", $pessoa_id)->get();
@@ -32,6 +33,8 @@ class AlterarDadosDaPessoa
         $Pessoa->nome = $dados["nome"];
         $Pessoa->dataNascimento = $dados["dataNascimento"];
         $Pessoa->save();
+
+        AtualizarDadosDaSession::atualizaDadosSession($request);
 
         return redirect()->back()->with('message', 'Dados alterados com sucesso!');
     }

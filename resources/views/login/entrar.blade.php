@@ -22,6 +22,12 @@
                 </ul>
             </div>
             @endif
+
+            @if(session()->has('message'))
+                <div class="alert alert-success">
+                    {{ session()->get('message') }}
+                </div>
+            @endif
             <h1 class="text-center">Entre na sua conta</h1>
             <input type="email" name="email" id="inputEmail" class="form-control mb-3 mt-3" placeholder="Email" required="" autofocus="">
             <input type="password" name="password" id="inputPassword" class="form-control  mb-3" placeholder="Senha" required="">

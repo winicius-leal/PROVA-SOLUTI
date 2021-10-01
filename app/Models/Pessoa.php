@@ -27,9 +27,9 @@ class Pessoa extends Model
         return $this->hasOne(CPF::class, "pessoa_id");
     }
 
-    public function Certificado()
+    public function Certificados()
     {
-        return $this->hasOne(Certificado::class, "pessoa_id");
+        return $this->hasMany(Certificado::class, "pessoa_id");
     }
 
     public function Usuario()
