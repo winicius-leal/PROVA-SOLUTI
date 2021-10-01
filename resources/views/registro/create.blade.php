@@ -23,31 +23,31 @@
             @endif
 
             <h1 class="text-center">CRIAR NOVA CONTA</h1>
-            <input type="text" name="name" id="" class="form-control mb-2" placeholder="Nome"  autofocus="">
-            <input type="email" name="email" id="" class="form-control mb-2" placeholder="Email"  autofocus="">
-            <input type="password" name="password" id="" class="form-control mb-2" placeholder="Senha" >
-            <input type="password" name="password_confirmation" id="" class="form-control mb-2" placeholder="Repita a Senha" >
-            <input type="integer" name="CPF" id="" class="form-control mb-2" placeholder="CPF" >
-            <input type="date" name="DataNascimento" id="" class="form-control mb-2" placeholder="Data de Nascimento" >
+            <input value="{{old('name')}}" type="text" name="name" id="" class="form-control mb-2" placeholder="Nome"  autofocus="">
+            <input value="{{old('email')}}" type="email" name="email" id="" class="form-control mb-2" placeholder="Email"  autofocus="">
+            <input value="{{old('password')}}" type="password" name="password" id="" class="form-control mb-2" placeholder="Senha" >
+            <input value="{{old('password_confirmation')}}" type="password" name="password_confirmation" id="" class="form-control mb-2" placeholder="Repita a Senha" >
+            <input value="{{old('CPF')}}" type="integer" name="CPF" id="" class="form-control mb-2" placeholder="CPF" >
+            <input value="{{old('DataNascimento')}}" type="date" name="DataNascimento" id="" class="form-control mb-2" placeholder="Data de Nascimento" >
             <div class="row mb-2">
                 <div class="col-3">
-                    <input type="text" class="form-control" name="ddd" placeholder="DDD">
+                    <input  value="{{old('ddd')}}" type="text" class="form-control" name="ddd" placeholder="DDD">
                 </div>
                 <div class="col-9">
-                    <input type="text" class="form-control" name = "telefone" placeholder="Telefone">
+                    <input value="{{old('telefone')}}" type="text" class="form-control" name = "telefone" placeholder="Telefone">
                 </div>
             </div>
-            <input type="text" name="rua" id="" class="form-control mb-2" placeholder="Rua" >
+            <input value="{{old('rua')}}" type="text" name="rua" id="" class="form-control mb-2" placeholder="Rua" >
             <div class="row mb-2">
                 <div class="col-3">
-                    <input type="number" name="numero" class="form-control" placeholder="N">
+                    <input value="{{old('numero')}}" type="number" name="numero" class="form-control" placeholder="N">
                 </div>
                 <div class="col-9">
-                    <input type="text" name="bairro" class="form-control" placeholder="Bairro/Setor">
+                    <input value="{{old('bairro')}}"  type="text" name="bairro" class="form-control" placeholder="Bairro/Setor">
                 </div>
             </div>
-            <input type="text" name="cidade" id="" class="form-control mb-2" placeholder="Cidade" >
-            <input type="text" name="estado" id="" class="form-control mb-2" placeholder="Estado" >
+            <input value="{{old('cidade')}}" type="text" name="cidade" id="" class="form-control mb-2" placeholder="Cidade" >
+            <input value="{{old('estado')}}" type="text" name="estado" id="" class="form-control mb-2" placeholder="Estado" >
         
             <button class="btn btn-success btn-block" type="submit" id="btn-signup"><i class="fas fa-user-plus"></i> Criar Conta</button>
         </form>            

@@ -21,7 +21,9 @@ class RegistroController extends Controller
     public function store(RegistroFormRequest $request)
     {   
 
-        $request->validated();
+        $validator = $request->validated();
+
+        $validator = $request->safe()->only(['name', 'email']);
 
         $email = new User();
         $retornoEmail = $email->validaEmail($request->email);

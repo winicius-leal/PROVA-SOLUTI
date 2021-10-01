@@ -38,6 +38,7 @@ class RegistroFormRequest extends FormRequest
             'password' => 'confirmed|min:6',
         ];
     }
+
     public function messages()
     {
         return [
@@ -74,4 +75,6 @@ class RegistroFormRequest extends FormRequest
             'password.min' => 'senhas deve ter mais de 6 caracteres',
         ];
     }
+
+
 }
