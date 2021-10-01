@@ -9,7 +9,7 @@
     <title>SOLUTI</title>
 </head>
 <body>       
-    <div id="formulario-login" class="bg-white ">
+    <div id="formulario-login" class="bg-white">
      
         <form class="form-signin" method="post">
             @csrf

@@ -6,6 +6,9 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use App\Models\{Usuario,User,Pessoa,CPF,Telefone,Endereco};
+use Illuminate\Support\Facades\Redirect;
+use App\Http\Requests\RegistroFormRequest;
+
 
 
 class RegistroController extends Controller
@@ -15,15 +18,30 @@ class RegistroController extends Controller
         return view('registro.create');
     }
 
-    public function store(Request $request)
+    public function store(RegistroFormRequest $request)
     {   
-        $cpf = new CPF();
-        echo $cpf->validaCpf($request->CPF);
 
-        var_dump($request->all());
-        exit;
-        $request->password = Hash::make($request->password);
+        $request->validated();
+
+        $email = new User();
+        $retornoEmail = $email->validaEmail($request->email);
         
+        if(isset($retornoEmail))
+        {    
+            return $retornoEmail;
+        }
+
+        $cpf = new CPF();
+
+        $retornoCpf = $cpf->validaCpf($request->CPF);
+        
+        if(isset($retornoCpf))
+        {    
+            return $retornoCpf;
+        }
+
+        $request->password = Hash::make($request->password);
+    
         $user = User::create([
             "email"=>$request->email,
             "password"=>$request->password

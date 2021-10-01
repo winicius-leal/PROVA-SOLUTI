@@ -12,50 +12,51 @@ class CPF extends Model
     public $timestamps = false;
     protected $fillable = ["numero","pessoa_id"];
 
+    public function pessoa()
+    {
+        return $this->belongsTo(Pessoa::class);
+    }
 
     public function validaCpf(String $cpf)
-    {
-        $cpf = $this->removeCaracteresEspeciais($cpf);
+    {   
+        return $this->removeCaracteresEspeciais($cpf);
     }
     public function removeCaracteresEspeciais($cpf)
     {
         $cpf = preg_replace( '/[^0-9]/is', '', $cpf );
-        $this->verificaQuantidaDeDeDigitos($cpf);
+
+        return $this->verificaQuantidaDeDeDigitos($cpf);
     }
     public function verificaQuantidaDeDeDigitos($cpf)
     {
-        if (strlen($cpf) != 11) 
+        if (strlen($cpf) != 11 || empty($cpf)) 
         {
-            return Redirect::back()->withErrors(["error"=>"Quantidade de Digitos inválido!"]);
+            return Redirect::back()->withErrors(["error"=>"Tamanho do CPF inválido!"]);
         }
-
-        $this->verificaSequenciaDeDigitosRepetidos($cpf);
+                
+        return $this->verificaSequenciaDeDigitosRepetidos($cpf);
     }
 
     public function verificaSequenciaDeDigitosRepetidos($cpf)
     {
         if (preg_match('/(\d)\1{10}/', $cpf)) 
         {
-            return Redirect::back()->withErrors(["error"=>"CPF inválido!"]);
+            return Redirect::back()->withErrors(["error"=>"CPF com números em sequência !"]);
         }
 
-        $this->consultaNoBancoCpfRepetido($cpf);
+        return $this->consultaNoBancoCpfRepetido($cpf);
     }
+
     public function consultaNoBancoCpfRepetido($cpf)
     {
-        $cpf = CPF::where('numero', 22222222222)->get();
+        $cpf = CPF::where('numero', $cpf)->get();
 
-        if(isset($cpf))
-        {
-            //return redirect("/entrar");
-            return Redirect::back()->withErrors(["error"=>"CPF inválido!"]);
+        if(isset($cpf[0]))
+        {   
+            return Redirect::back()->withErrors(["error"=>"CPF já cadastrado!"]);
         }
-        var_dump($cpf);
-        exit;
+        return;
     }
 
-    public function pessoa()
-    {
-        return $this->belongsTo(Pessoa::class);
-    }
+
 }
