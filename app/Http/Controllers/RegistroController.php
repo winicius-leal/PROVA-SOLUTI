@@ -44,15 +44,18 @@ class RegistroController extends Controller
 
         $request->password = Hash::make($request->password);
     
-        $user = User::create([
-            "email"=>$request->email,
-            "password"=>$request->password
-        ]);
+
 
         $pessoa = Pessoa::create([
             "nome"=>$request->name,
             "dataNascimento"=>$request->DataNascimento,
-            "user_id"=>$user->id
+        ]);
+
+
+        $user = User::create([
+            "email"=>$request->email,
+            "password"=>$request->password,
+            "pessoa_id"=>$pessoa->id
         ]);
 
         CPF::create([

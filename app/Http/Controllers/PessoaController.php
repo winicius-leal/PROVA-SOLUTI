@@ -3,19 +3,19 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Models\{Pessoa,CPF,Telefone,Endereco};
+use App\Models\{Pessoa,CPF,Telefone,Endereco, User};
 use App\Http\Requests\PessoaFormRequest;
 use Illuminate\Support\Facades\Auth;
-use App\Services\{CriarPessoa};
+use App\Services\{AlterarDadosDaPessoa};
 
 class PessoaController extends Controller
 {
-    public function create()
+    public function create(Request $request)
     {   
-        $usuario = Auth::user();
-        $pessoa = Pessoa::with("CPF","Endereco","Telefone","Certificado","Usuario")->where("user_id", $usuario->id)->get();
 
-        return view("dashboard.create", ["pessoa"=>$pessoa[0]]);
+        $session = $request->session()->get("pessoa");
+
+        return view("dashboard.create", ["pessoa"=>$session[0]]);
     }
 
     public function store(PessoaFormRequest $request)
@@ -23,13 +23,12 @@ class PessoaController extends Controller
 
         $request->validated($request->all());
         
-        $pessoa = Pessoa::with("CPF","Endereco","Telefone","Certificado","Usuario")->where("user_id", $request->id)->get();
-   
-        $service = new CriarPessoa();
+        $usuario = Auth::user();
+
+        $service = new AlterarDadosDaPessoa();
        
-        $service->criarPessoa($pessoa);
+        return $service->alterarPessoa($request->all(), $usuario->pessoa_id);
         
-        return redirect("/");
         
     }
 

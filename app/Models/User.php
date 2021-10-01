@@ -20,7 +20,8 @@ class User extends Authenticatable
      */
     protected $fillable = [
         'email',
-        'password'
+        'password',
+        "pessoa_id"
     ];
 
     public $timestamps = false;
@@ -47,7 +48,7 @@ class User extends Authenticatable
     
     public function pessoa()
     {
-       return $this->hasOne(Pessoa::class);
+       return $this->belongsTo(Pessoa::class);
     }
 
     public function validaEmail(String $email)
