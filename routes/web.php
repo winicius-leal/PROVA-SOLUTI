@@ -2,7 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\{
-    UsuarioController, 
+    HomeController, 
     PessoaController, 
     EntrarController, 
     RegistroController, 
@@ -15,12 +15,12 @@ Route::get('/', function () {
 });
 */
 
-Route::get('/', [UsuarioController::class, 'index'])->middleware("auth");
+Route::get('/', [HomeController::class, 'index'])->middleware("auth");
 
 Route::get('/logout', [LogoutController::class, 'logout'])->middleware("auth");
 
 Route::get('/pessoa/alterar', [PessoaController::class, 'create'])->middleware("auth");
-Route::post('/pessoa/alterar', [PessoaController::class, 'store'])->middleware("auth");
+Route::post('/pessoa/alter/{id}', [PessoaController::class, 'store'])->middleware("auth");
 
 Route::get('/entrar', [EntrarController::class, 'index'])->name("entrar");
 Route::post('/entrar', [EntrarController::class, 'entrar']);

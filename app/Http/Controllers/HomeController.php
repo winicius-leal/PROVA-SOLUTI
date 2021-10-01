@@ -4,7 +4,7 @@ use Illuminate\Http\Request;
 use App\Models\{Pessoa,Telefone,Endereco,CPF};
 use Illuminate\Support\Facades\Auth;
 
-class UsuarioController extends Controller
+class HomeController extends Controller
 {
     public function index(Request $request){
 

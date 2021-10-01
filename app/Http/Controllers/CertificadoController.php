@@ -13,8 +13,9 @@ class CertificadoController extends Controller
     public function create()
     {
         $usuario = Auth::user();
-        
-        return view("certificado.create",compact("usuario"));
+        $pessoa = Pessoa::with("CPF","Endereco","Telefone","Certificado","Usuario")->where("user_id", $usuario->id)->get();
+
+        return view("certificado.create",["pessoa"=>$pessoa[0]]);
     }
     
     public function store(Request $request)
@@ -49,9 +50,12 @@ class CertificadoController extends Controller
     
             $upload = $request->certificado->storeAs('certificadoPEM', $nameFile);
 
-            if (!$upload )
-
+            if (!$upload ){
                 return redirect()->back()->with('error', 'Falha ao fazer upload')->withInput();
+            }
+
+            return redirect("/");
+
     
         }
 

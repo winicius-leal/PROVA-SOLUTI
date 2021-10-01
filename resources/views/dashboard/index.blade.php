@@ -29,7 +29,7 @@
             {{$pessoa->Endereco->estado}} 
         </li>
     </ul>
-
+@if(isset($pessoa->Certificado))
     <h3>
         Dados do Certificado
     </h3>
@@ -47,6 +47,7 @@
             Não depis de: @if(isset($pessoa->Certificado->notAfter)) {{$pessoa->Certificado->notAfter}} @endif
         </li>
     </ul>
+@endif    
 </div>
 
 @endsection

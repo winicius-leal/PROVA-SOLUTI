@@ -12,7 +12,7 @@
             </ul>
         </div>
     @endif
-    <form method="post" action="/pessoa/criar/">
+    <form method="post" action="/pessoa/alter/{{$pessoa->id}}">
         @csrf
         <div class="container"> 
             <div class="mb-3 col-6">
@@ -69,7 +69,7 @@
 
         
 
-        <button class="btn btn-primary">Salvar</button>
+        <button class="btn btn-primary" type="submit" >  Salvar</button>
     </form>    
 </div>
 
