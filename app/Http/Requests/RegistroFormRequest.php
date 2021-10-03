@@ -24,8 +24,9 @@ class RegistroFormRequest extends FormRequest
     public function rules()
     {
         return [
+            'CPF' => 'required|size:11|unique:c_p_f_s,numero',
+            'email' => 'email|unique:users,email',
             'name' => 'required|min:1|max:50',
-            'CPF' => 'required|size:11',
             'DataNascimento' => 'required|size:10',
             'ddd' => 'required|min:2|max:3',
             'telefone' => 'required|min:8|max:9',
@@ -34,14 +35,15 @@ class RegistroFormRequest extends FormRequest
             'bairro' => 'required|min:1|max:30',
             'cidade' => 'required|min:1|max:30',
             'estado' => 'required|min:1|max:30',
-            'email' => 'email',
-            'password' => 'confirmed|min:6',
+            'password' => 'confirmed|min:6'
         ];
     }
 
     public function messages()
     {
         return [
+            'email.unique' => 'email já cadastrado',
+            'CPF.unique' => 'CPF já cadastrado',
             'name.required' => 'Nome é Obrigatorio',
             'name.min' => 'Nome é invalido',
             'CPF.required' => 'CPF é Obrigatorio',

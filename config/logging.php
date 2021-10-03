@@ -47,6 +47,12 @@ return [
             'level' => env('LOG_LEVEL', 'debug'),
         ],
 
+        'CanalDeRegistroDeLogs' => [
+            'driver' => 'single',
+            'path' => storage_path('logs/registroDeLogs.log'),
+            'level' => env('debug')
+        ],
+
         'daily' => [
             'driver' => 'daily',
             'path' => storage_path('logs/laravel.log'),

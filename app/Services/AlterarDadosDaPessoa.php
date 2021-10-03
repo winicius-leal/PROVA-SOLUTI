@@ -36,6 +36,6 @@ class AlterarDadosDaPessoa
 
         AtualizarDadosDaSession::atualizaDadosSession($request);
 
-        return redirect()->back()->with('message', 'Dados alterados com sucesso!');
+        return true;
     }
 }

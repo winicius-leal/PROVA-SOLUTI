@@ -3,35 +3,46 @@ namespace App\Services;
 
 use Illuminate\Http\Request;
 use phpseclib3\File\X509;
-use App\Models\{Pessoa, Certificado};
+use App\Models\{Certificado};
 
 class ImportarCertificado
 {
-    public function verificaArquivo($certificado)
+    private $X509;
+    private $certificado;
+
+    public function __construct()
     {
-        $x509 = new X509();
+        $this->X509 = new X509();
+    }
 
-        $cert = $x509->loadX509(file_get_contents($certificado));
+    public function validaArquivo($certificado)
+    {
+        
+        $certificadoCarregado = $this->X509->loadX509(file_get_contents($certificado));
 
-        return $cert;
+        if (!$certificadoCarregado) {
+
+            return;
+
+        }
+
+        $this->certificado = $certificadoCarregado;
+
+        return true;
 
     }
-    public function salvarCertificadoNoBanco($request, $pessoa_id)
+
+    public function salvarCertificadoNoBanco($pessoa_id)
     {   
-                
-        $x509 = new X509();
+        $dn = $this->X509->getDN(X509::DN_STRING);
 
-        $cert = $x509->loadX509(file_get_contents($request->certificado));
+        $issuerDN = $this->X509->getIssuerDN(X509::DN_STRING);
         
-        $dn = $x509->getDN(X509::DN_STRING);
+        $naoAntesDe = $this->certificado["tbsCertificate"]["validity"]["notBefore"]["utcTime"];
+        
+        $naoDepoisDe = $this->certificado["tbsCertificate"]["validity"]["notAfter"]["utcTime"];
 
-        $issuerDN = $x509->getIssuerDN(X509::DN_STRING);
-        
-        $naoAntesDe = $cert["tbsCertificate"]["validity"]["notBefore"]["utcTime"];
-        
-        $naoDepoisDe = $cert["tbsCertificate"]["validity"]["notAfter"]["utcTime"];
-
-        $certificado = Certificado::create([
+        $certificadoSalvo = Certificado::create([
             "dn"=>$dn,
             "issuerDn"=>$issuerDN,
             "notBefore"=>$naoAntesDe,
@@ -39,21 +50,19 @@ class ImportarCertificado
             "pessoa_id"=>$pessoa_id
         ]);
 
-        AtualizarDadosDaSession::atualizaDadosSession($request);
-        
-        return $certificado;
+        return $certificadoSalvo;
 
     }
 
-    public function importarCertificadoParaServidor($IdCertificado, $arquivo )
+    public function importarCertificadoParaServidor($certificado, $idCertificado)
     {
-        $name = $IdCertificado;
+        $name = $idCertificado;
     
             $extension = ".pem";
     
             $nameFile = "{$name}.{$extension}";
     
-            $upload = $arquivo->storeAs('certificadoPEM', $nameFile);
+            $upload = $certificado->storeAs('certificadoPEM', $nameFile);
 
             return $upload;
     }

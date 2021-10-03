@@ -3,35 +3,58 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\{Auth};
 use App\Models\Pessoa;
-use App\Services\AtualizarDadosDaSession;
+use App\Services\{AtualizarDadosDaSession, Logs};
 
 class LoginController extends Controller
 {
+    
+    private $Logs;
+
+    public function __construct()
+    {
+        $this->Logs = new Logs();
+    }
+
     public function index()
     {
-        return view("login.entrar");
+        try{
+
+            return view("login.entrar");
+
+        } catch (\Exception $erro) {
+
+            $this->Logs->registraLog("error", $erro->getMessage());
+
+            return $erro->getMessage();
+        }
+        
     }
 
     public function entrar(Request $request)
     {  
+        try {
 
-        if(!Auth::attempt($request->only(["email", "password"])))
-        {
+            if(!Auth::attempt($request->only(["email", "password"])))
+            {
+                $this->Logs->registraLog("info", "tentativa de logon incorreta com : ".$request->email);
+                return redirect()->back()->withErrors("Usuario ou senha inválidos!");
+            }
+
+            AtualizarDadosDaSession::atualizaDadosSession($request);
+
+            $this->Logs->registraLog("info", "Realizou autenticação");
+
+            return redirect("/certificado/importar");
             
-            return redirect()->back()->withErrors("Usuario ou senha inválidos!");
+        } catch (\Exception $erro) {
+
+            $this->Logs->registraLog("warning", $erro->getMessage());
+
+            return redirect()->back()->withErrors("Algo deu errado, tente mais tarde ou entre em contato com o suporte");
         }
-
-        AtualizarDadosDaSession::atualizaDadosSession($request);
-/*
-        $usuario = Auth::user();
         
-        $pessoa = Pessoa::with("CPF","Endereco","Telefone","Certificado","User")->where("id", $usuario->pessoa_id)->get();
         
-        $request->session()->put('pessoa', $pessoa);
-        */
-
-        return redirect("/certificado/importar");
     }
 }

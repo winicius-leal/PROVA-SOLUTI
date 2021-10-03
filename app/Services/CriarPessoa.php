@@ -5,38 +5,39 @@ use Illuminate\Support\Facades\Hash;
 
 class CriarPessoa
 {
-    public function criarPessoa($request)
+    public function criarPessoa(Array $dadosValidados)
     {   
-        $request->password = Hash::make($request->password);
-    
+
+        $dadosValidados["password"] = Hash::make($dadosValidados["password"]);
+
         $pessoa = Pessoa::create([
-            "nome"=>$request->name,
-            "dataNascimento"=>$request->DataNascimento,
+            "nome"=>$dadosValidados["name"],
+            "dataNascimento"=>$dadosValidados["DataNascimento"],
         ]);
 
         $usuario = User::create([
-            "email"=>$request->email,
-            "password"=>$request->password,
+            "email"=>$dadosValidados["email"],
+            "password"=>$dadosValidados["password"],
             "pessoa_id"=>$pessoa->id
         ]);
 
         CPF::create([
-            "numero"=>$request->CPF,
+            "numero"=>$dadosValidados["CPF"],
             "pessoa_id"=>$pessoa->id
         ]);
 
         Telefone::create([
-            "ddd"=>$request->ddd,
-            "numero"=>$request->telefone,
+            "ddd"=>$dadosValidados["ddd"],
+            "numero"=>$dadosValidados["telefone"],
             "pessoa_id"=>$pessoa->id
         ]);
 
         Endereco::create([
-            "rua"=>$request->rua,
-            "numero"=>$request->numero,
-            "bairro"=>$request->bairro,
-            "cidade"=>$request->cidade,
-            "estado"=>$request->estado,
+            "rua"=>$dadosValidados["rua"],
+            "numero"=>$dadosValidados["numero"],
+            "bairro"=>$dadosValidados["bairro"],
+            "cidade"=>$dadosValidados["cidade"],
+            "estado"=>$dadosValidados["estado"],
             "pessoa_id"=>$pessoa->id
         ]);
 

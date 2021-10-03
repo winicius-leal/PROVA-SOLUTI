@@ -3,17 +3,17 @@
 
 @section("conteudo")
 
-<div class="container ">
+<div class="container col-6">
 
 @if(isset($pessoa->Certificados))
     
-    <h3>
+    <h1>
         Dados do Certificado
-    </h3>
+    </h1>
     @foreach($pessoa->Certificados as $certificado)
-    <h3>
+    <hr>
         
-    </h3>
+</hr>
     <ul class="list-group ">
         <li class="list-group-item bg-light">
         <strong>DN: </strong>{{$certificado->dn}}
@@ -31,9 +31,12 @@
     </ul>
 @endif 
 
-    <h3 class="mt-4">
+    <h1 class="mt-4">
         Dados Pessoais
-    </h3>
+    </h1>
+    <hr>
+        
+    </hr>
     <ul class="list-group list-group-flush ">
         <li class="list-group-item bg-light">
            <strong>Nome: </strong> {{$pessoa->nome}} 

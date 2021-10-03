@@ -5,38 +5,67 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use phpseclib3\File\X509;
 use App\Models\{Pessoa, Certificado};
-use App\Services\ImportarCertificado, AtualizarDadosDaSession;
+use App\Services\{ImportarCertificado, Logs, AtualizarDadosDaSession};
+use App\Http\Requests\CertificadoFormRequest;
 
 class CertificadoController extends Controller
 {
+    private $Logs;
+
+    public function __construct()
+    {
+        $this->Logs = new Logs();
+    }
+
     public function create(Request $request)
     {
-        $session = $request->session()->get("pessoa");
+        try {
 
-        return view("certificado.create",["pessoa"=>$session[0]]);
+            $session = $request->session()->get("pessoa");
+
+            return view("certificado.create",["pessoa"=>$session[0]]);
+
+        } catch (\Exception $erro) {
+
+            $this->Logs->registraLog("error", $erro->getMessage());
+
+            return redirect()->back()->withErrors("Algo deu errado, tente mais tarde ou entre em contato com o suporte");
+        }
+       
     }
     
-    public function store(Request $request)
+    public function store(CertificadoFormRequest $request)
     {   
+        try {
 
-        $session = $request->session()->get("pessoa");
+            $request->validated($request->certificado);
 
-        $service = new ImportarCertificado();
+            $session = $request->session()->get("pessoa");
+    
+            $service = new ImportarCertificado();
+    
+            if(!$service->validaArquivo($request->certificado))
+            {
+                return redirect()->back()->withErrors(['Não é um certificado válido']);
+            }
+    
+            $certificadoSalvo = $service->salvarCertificadoNoBanco($session[0]->id);
+            
+            $service->importarCertificadoParaServidor($request->certificado, $certificadoSalvo->id);
+            
+            $this->Logs->registraLog("info"," Importou um certificado de ID: ".$certificadoSalvo->id );
 
-        $return = $service->verificaArquivo($request->certificado);
-        
-        if (!$return)
-        {
-            return redirect()->back()->withErrors(['Não é um certificado válido']);
+            AtualizarDadosDaSession::atualizaDadosSession($request);
+    
+            return redirect("/");
+
+        } catch (\Exception $erro) {
+
+            $this->Logs->registraLog("error", $erro->getMessage());
+
+            return redirect()->back()->withErrors("Algo deu errado, tente mais tarde ou entre em contato com o suporte");
         }
 
-        $certificado = $service->salvarCertificadoNoBanco($request, $session[0]->id);
-        
-        $upload = $service->importarCertificadoParaServidor($certificado->id, $request->certificado);
-
-        return redirect("/");
-        
     }
 }

@@ -50,36 +50,5 @@ class User extends Authenticatable
     {
        return $this->belongsTo(Pessoa::class);
     }
-
-    public function validaEmail(String $email)
-    {
-        return $this->removeCaracteresIlegais($email);
-
-    }
-    public function removeCaracteresIlegais(String $email)
-    {
-        $email = filter_var($email, FILTER_SANITIZE_EMAIL);
-
-        return $this->verificaEmail($email);
-    }
-
-    public function verificaEmail(String $email)
-    {
-        if (!filter_var($email, FILTER_VALIDATE_EMAIL)) 
-        {
-            return Redirect::back()->withErrors(["error"=>"Email inválido!"]);
-        }
-        return $this->consultaNoBancoEmailRepetido($email);
-    }
-    public function consultaNoBancoEmailRepetido(String $email)
-    {        
-        $email = User::where('email', $email)->get();
-
-        if(isset($email[0]))
-        {   
-            return Redirect::back()->withErrors(["error"=>"Email já cadastrado!"]);
-        }
-        return;
-    }
     
 }

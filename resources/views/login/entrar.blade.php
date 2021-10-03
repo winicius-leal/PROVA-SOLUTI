@@ -8,7 +8,9 @@
     <link rel="stylesheet" href="/style.css">
     <title>SOLUTI</title>
 </head>
-<body>       
+<body>  
+
+
     <div id="formulario-login" class="bg-white">
      
         <form class="form-signin" method="post">
@@ -32,16 +34,15 @@
             <input type="email" name="email" id="inputEmail" class="form-control mb-3 mt-3" placeholder="Email" required="" autofocus="">
             <input type="password" name="password" id="inputPassword" class="form-control  mb-3" placeholder="Senha" required="">
             
-            <button class="btn btn-success btn-block" type="submit"><i class="fas fa-sign-in-alt"></i> Entrar</button>
-            
-            <a href="/" id="forgot_pswd">Esqueceu a senha?</a>
+            <button class="btn btn-success btn-block color" type="submit"><i class="fas fa-sign-in-alt"></i> Entrar</button>
+            <hr>
+            <a href="/" id="forgot_pswd">Esqueceu a senha ?</a>
             <hr>
 
-            <a href="/registrar" class="btn btn-primary btn-block text-white" type="button" id=""><i class="fas fa-user-plus"></i> Criar</a>
+            <a href="/registrar">Registrar-se</i></a>
             </form>            
     </div>
 
-    
 
     <style>
         #formulario-login

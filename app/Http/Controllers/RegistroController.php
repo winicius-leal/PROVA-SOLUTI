@@ -3,50 +3,56 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\{Auth, Hash, Redirect};
 use App\Models\{User,Pessoa,CPF,Telefone,Endereco};
-use Illuminate\Support\Facades\Redirect;
 use App\Http\Requests\RegistroFormRequest;
-use App\Services\CriarPessoa;
+use App\Services\{CriarPessoa, Logs};
 
 
 
 class RegistroController extends Controller
 {
-    public function create()
+    private $Logs;
+
+    public function __construct()
     {
-        return view('registro.create');
+        $this->Logs = new Logs();
     }
 
-    public function store(RegistroFormRequest $request)
+    public function create()
+    {
+        try {
+
+            return view('registro.create');
+
+        } catch (\Exception $erro) {
+            
+            $this->Logs->registraLog("error", $erro->getMessage());
+            
+            return redirect()->back()->withErrors("Algo deu errado, tente mais tarde ou entre em contato com o suporte");
+        }
+        
+    }
+    
+    public function store( RegistroFormRequest $request)
     {   
+        try {
+                
+            $dadosValidados = $request->validated();
 
-        $validator = $request->validated();
+            $service = new CriarPessoa();
+            
+            $service->criarPessoa($dadosValidados);
 
-        $email = new User();
+            $this->Logs->registraLog("info", "Novo usuario criado ".$dadosValidados["email"]);
 
-        $retornoEmail = $email->validaEmail($request->email);
-        
-        if(isset($retornoEmail))
-        {    
-            return $retornoEmail;
+            return redirect("/entrar")->with('message', 'Usuario criado com sucesso!');
+            
+        } catch (\Exception $erro) {
+
+            $this->Logs->registraLog("error", $erro->getMessage());
+
+            return redirect()->back()->withErrors("Algo deu errado, tente mais tarde ou entre em contato com o suporte");
         }
-
-        $cpf = new CPF();
-
-        $retornoCpf = $cpf->validaCpf($request->CPF);
-        
-        if(isset($retornoCpf))
-        {    
-            return $retornoCpf;
-        }
-
-        $service = new CriarPessoa();
-        
-        $usuario = $service->criarPessoa($request);
-
-        return redirect("/entrar")->with('message', 'Usuario criado com sucesso!');
-        
     }
 }
