@@ -14,7 +14,7 @@
 <body>
     <div class="d-flex" id="wrapper">
         <!-- Sidebar -->
-        <div class="bg-success " id="sidebar-wrapper">
+        <div class="bg-secondary " id="sidebar-wrapper">
             <div class="sidebar-heading text-center py-4 primary-text fs-4 fw-bold text-uppercase border-bottom">
               <img src="https://www.soluti.com.br/media/logo/stores/1/Logo_horizontal_23x.png" height="60px" class="mb-2">
             </div>
